@@ -18,7 +18,9 @@ def unique_words(histogram):
     """
     Returns the total count of unique words in the histogram argument
     and returns the total count of unique words in the histogram.
+    1.) Need to get words in histogram and then update it.
     """
+    return len(histogram)
 
 def freuency(word, histogram):
     """
@@ -27,4 +29,6 @@ def freuency(word, histogram):
 
 # Since have alot of files this is needed
 if __name__ == "__main__":
-    print(histogram(sentence))
+    get_histogram = histogram(sentence)
+    print(get_histogram)
+    print(unique_words(get_histogram))
