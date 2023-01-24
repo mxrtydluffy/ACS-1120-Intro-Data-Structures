@@ -22,9 +22,9 @@ def unique_words(histogram):
     """
     return len(histogram)
 
-def freuency(word, histogram):
+def frequency(word, histogram):
     """
-    Returns the number of times tht words appears in a text.
+    Returns the number of times that words appears in a text.
     """
     return histogram[word]
 
@@ -33,4 +33,4 @@ if __name__ == "__main__":
     get_histogram = histogram(sentence)
     print(get_histogram)
     print(unique_words(get_histogram))
-    print(freuency('goat', get_histogram))
+    print(frequency('fish', get_histogram))
