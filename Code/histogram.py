@@ -26,9 +26,11 @@ def freuency(word, histogram):
     """
     Returns the number of times tht words appears in a text.
     """
+    return histogram[word]
 
 # Since have alot of files this is needed
 if __name__ == "__main__":
     get_histogram = histogram(sentence)
     print(get_histogram)
     print(unique_words(get_histogram))
+    print(freuency('goat', get_histogram))
