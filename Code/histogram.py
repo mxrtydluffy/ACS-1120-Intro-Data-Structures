@@ -31,11 +31,30 @@ def frequency(word, histogram):
     """
     Returns the number of times that words appears in a text.
     """
-    return histogram[word]
+    if isinstance(histogram, dict):
+        return histogram[word]
+    elif isinstance(histogram, list):
+        for x in range(len(histogram)):
+            if word in histogram[x]:
+                return histogram[x][1]
+
+def listogram(source_text):
+    """
+    Returns histogram from a source text in terms of how many times it appears.
+    """
+    listogram = []
+    list_of_words = re.finall(r"\w+", source_text.lower())
+    helper_list = []
+    for word in list_of_words:
+        if word not in helper_list:
+            listogram.append([word, list_of_words.count(word)])
+            helper_list.append(word)
+        return listogram
 
 # Since have alot of files this is needed
 if __name__ == "__main__":
     get_histogram = dictogram(sentence)
+    my_listogram = listogram(sentence)
     print(get_histogram)
     print(unique_words(get_histogram))
     print(frequency('fish', get_histogram))
