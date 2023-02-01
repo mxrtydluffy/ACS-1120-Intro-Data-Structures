@@ -1,19 +1,20 @@
 # Regular expression module which is a collection 
 # of pre-defined functions to process inoput text.
 import re
+from helper_functions import read_file
 
 # Analyze frequency of words in a body of text
 #find body of source text
 sentence = "one fish two fish red fish blue fish"
 
-def histogram(source_text):
+def dictogram(source_text):
     """
     1.) Stored histogram in a dictionary.
     2.) Assigned list of words so the sentence can be split.
     3.) Looping in the sentence for the word to get each value.
     """
     histogram = {}
-    list_of_words = re.findall(r"\w+", source_text.lower())
+    list_of_words = read_file(source_text.lower())
     for word in list_of_words:
         histogram[word] = list_of_words.count(word)
     return histogram
@@ -34,7 +35,7 @@ def frequency(word, histogram):
 
 # Since have alot of files this is needed
 if __name__ == "__main__":
-    get_histogram = histogram(sentence)
+    get_histogram = dictogram(sentence)
     print(get_histogram)
     print(unique_words(get_histogram))
     print(frequency('fish', get_histogram))

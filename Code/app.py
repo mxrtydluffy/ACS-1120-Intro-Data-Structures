@@ -1,5 +1,6 @@
 """Main script, uses other modules to generate sentences."""
 from flask import Flask
+from sample import generate_sentence
 
 
 app = Flask(__name__)
@@ -12,7 +13,7 @@ app = Flask(__name__)
 def home():
     """Route that returns a web page containing the generated text."""
     return "<p>TODO: Return a word here!</p>"
-
+    # Generate sentence here
 
 if __name__ == "__main__":
     """To run the Flask server, execute `python app.py` in your terminal.
