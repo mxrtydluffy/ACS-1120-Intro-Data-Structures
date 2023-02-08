@@ -24,7 +24,7 @@ def generate_sentence(source_text, number):
     return " ".join(word_list).capitalize() + "."
 
 if __name__ == "__main__":
-    sentence = "./data/spaceship.txt"
+    sentence = "./data/corpus.txt"
     word_frequency = {}
     for _ in range(3000000):
         histogram_words = random_word(sentence)

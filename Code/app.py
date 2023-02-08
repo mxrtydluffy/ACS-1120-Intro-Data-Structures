@@ -16,7 +16,7 @@ def home():
     num_of_words = int(request.args.get("num"))
 
     context = {
-        'sentence': generate_sentence('./data/spaceship.txt', num_of_words)
+        'sentence': generate_sentence('./data/corpus.txt', num_of_words)
     }
 
     return render_template('index.html', **context)
