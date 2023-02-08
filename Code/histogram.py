@@ -5,7 +5,7 @@ from helper_functions import read_file
 
 # Analyze frequency of words in a body of text
 #find body of source text
-sentence = "one fish two fish red fish blue fish"
+# sentence = "one fish two fish red fish blue fish"
 
 def dictogram(source_text):
     """
