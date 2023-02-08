@@ -20,9 +20,10 @@ class Listogram(list):
 
     def add_count(self, word, count=1):
         """Increase frequency count of given word by given count amount."""
-        # TODO: Increase word frequency by count
-        if self.__contains__(word):
-            self[self.index_of(word)][1] += count
+
+        given_word = self.index_of(word)
+        if given_word != None:
+            self[given_word][1] += count
         else:
             self.append([word, count])
             self.types += 1
@@ -30,18 +31,25 @@ class Listogram(list):
 
     def frequency(self, word):
         """Return frequency count of given word, or 0 if word is not found."""
-        # TODO: Retrieve word frequency count
-        return self[self.index_of(word)][1] if self.__contains__(word) else 0
+
+        given_word = self.index_of(word)
+        if given_word != None:
+            return self[given_word][1]
+        else:
+            return 0
 
     def __contains__(self, word):
         """Return boolean indicating if given word is in this histogram."""
-        # TODO: Check if word is in this histogram
-        return True if self.index_if(word) is not None else False
+
+        for i in self:
+            if i[0] == word:
+                return True
+        return False
 
     def index_of(self, target):
         """Return the index of entry containing given target word if found in
         this histogram, or None if target word is not found."""
-        # TODO: Implement linear search to find index of entry with target word
+        
         index = 0
         for i in self:
             if i[0] == target:
@@ -52,14 +60,13 @@ class Listogram(list):
     def sample(self):
         """Return a word from this histogram, randomly sampled by weighting
         each word's probability of being chosen by its observed frequency."""
-        # TODO: Randomly choose a word based on its frequency in this histogram
+
         words = 0
         dart = random.randint(1, self.tokens)
         for i in self:
             words += i[1]
             if words >= dart:
                 return i[0]
-
 
 def print_histogram(word_list):
     print()
