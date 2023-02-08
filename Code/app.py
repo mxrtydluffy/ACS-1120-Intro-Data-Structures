@@ -12,8 +12,10 @@ app = Flask(__name__)
 @app.route("/")
 def home():
     """Route that returns a web page containing the generated text."""
-    return "<p>TODO: Return a word here!</p>"
-    # Generate sentence here
+    
+    sentence = generate_sentence('./data/corpus.txt' 20)
+    return f"<p>{sentence}</p>"
+
 
 if __name__ == "__main__":
     """To run the Flask server, execute `python app.py` in your terminal.

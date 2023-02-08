@@ -14,7 +14,7 @@ def dictogram(source_text):
     3.) Looping in the sentence for the word to get each value.
     """
     histogram = {}
-    list_of_words = read_file(source_text.lower())
+    list_of_words = read_file(source_text)
     for word in list_of_words:
         histogram[word] = list_of_words.count(word)
     return histogram
@@ -43,7 +43,7 @@ def listogram(source_text):
     Returns histogram from a source text in terms of how many times it appears.
     """
     listogram = []
-    list_of_words = re.finall(r"\w+", source_text.lower())
+    list_of_words = read_file(source_text)
     helper_list = []
     for word in list_of_words:
         if word not in helper_list:
@@ -53,8 +53,8 @@ def listogram(source_text):
 
 # Since have alot of files this is needed
 if __name__ == "__main__":
-    get_histogram = dictogram(sentence)
+    sentence = "./data/corpus.txt"
+    my_histogram = dictogram(sentence)
     my_listogram = listogram(sentence)
-    print(get_histogram)
-    print(unique_words(get_histogram))
-    print(frequency('fish', get_histogram))
+    print(my_histogram)
+    print(unique_words(my_histogram))
