@@ -1,12 +1,15 @@
 """Main script, uses other modules to generate sentences."""
 from flask import Flask, request, render_template
 from sample import generate_sentence
+from helper_functions import read_file
 
 
 app = Flask(__name__)
 
 # TODO: Initialize your histogram, hash table, or markov chain here.
 # Any code placed here will run only once, when the server starts.
+
+text = read_file('./data/corpus.txt')
 
 
 @app.route("/")
@@ -15,9 +18,7 @@ def home():
 
     num_of_words = int(request.args.get("num"))
 
-    context = {
-        'sentence': generate_sentence('./data/corpus.txt', num_of_words)
-    }
+    context = {"sentence": generate_sentence(text, num_of_words)}
 
     return render_template('index.html', **context)
 

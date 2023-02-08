@@ -14,9 +14,8 @@ def dictogram(source_text):
     3.) Looping in the sentence for the word to get each value.
     """
     histogram = {}
-    list_of_words = read_file(source_text)
-    for word in list_of_words:
-        histogram[word] = list_of_words.count(word)
+    for word in source_text:
+        histogram[word] = source_text.count(word)
     return histogram
 
 def unique_words(histogram):
