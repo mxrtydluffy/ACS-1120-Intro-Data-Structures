@@ -3,25 +3,28 @@ from histogram import dictogram
 
 def random_word(source_text):
     """
-    Getting random word from the sentence
+    Getting random word from the inital text
     """
-    histogram_words = dictogram(sentence)
+    histogram_words = dictogram(source_text)
     random_word = random.choices(
         list(histogram_words.keys()),
         weights = histogram_words.values(),
-        k = 1
+        k=1
     )[0]
 
     return random_word
 
 def generate_sentence(source_text, number):
+    """
+    Generates random sentence from the text & word count #.
+    """
     word_list = []
     for _ in range(number):
         word_list.append(random_word(source_text))
     return " ".join(word_list).capitalize() + "."
 
 if __name__ == "__main__":
-    sentence = "./data/corpus.txt"
+    sentence = "./data/spaceship.txt"
     word_frequency = {}
     for _ in range(3000000):
         histogram_words = random_word(sentence)
