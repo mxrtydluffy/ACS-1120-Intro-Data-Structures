@@ -16,9 +16,9 @@ text = read_file('./data/corpus.txt')
 def home():
     """Route that returns a web page containing the generated text."""
 
-    num_of_words = int(request.args.get("num"))
+    # num_of_words = int(request.args.get("num"))
 
-    context = {"sentence": generate_sentence(text, num_of_words)}
+    context = {"sentence": generate_sentence(text, 100)}
 
     return render_template('index.html', **context)
 
