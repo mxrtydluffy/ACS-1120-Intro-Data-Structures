@@ -30,6 +30,6 @@ def make_sentence(histogram, first_word):
         next_word = sample_model(histogram, word)
         sentence.append(next_word)
         word = next_word
-    return " ".join(sentence)
+    return " ".join(sentence).captialize() + "."
 
 print(build_map(source_text))

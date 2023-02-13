@@ -2,6 +2,7 @@
 from flask import Flask, request, render_template
 from sample import generate_sentence
 from helper_functions import read_file
+from markov_chain import MarkovChain
 
 
 app = Flask(__name__)
@@ -16,9 +17,7 @@ text = read_file('./data/corpus.txt')
 def home():
     """Route that returns a web page containing the generated text."""
 
-    # num_of_words = int(request.args.get("num"))
-
-    context = {"sentence": generate_sentence(text, 100)}
+    markov = MarkovChain(text)
 
     return render_template('index.html', **context)
 
