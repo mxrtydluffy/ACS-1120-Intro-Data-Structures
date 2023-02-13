@@ -24,7 +24,34 @@ class Dictogram(dict):
             self.types += 1
         self.tokens += count
 
-# entry_point = histogram.sample()
+    def add_next_word(self, word, following_word):
+        if following_word in self[word]["next"]:
+            self[word]["next"][following_word] += 1
+        else:
+            self[word]["next"][following_word] += 1
+
+    def sample(self):
+        dart = random.uniform(0, self.tokens)
+        fence = 0
+        for word in self:
+            fence += self[word]["count"]
+            if dart <= fence:
+                return word
+    
+    def start_sample(self):
+        start_histogram = {}
+        start_tokens = 0
+        for word in self:
+            if word[-1] in ["!", "?", "."]:
+                following_words = self[word]["next"]
+                for next_word in following_words:
+                    if next_word in start_histogram:
+                        start_histogram[next_word] += following_words[next_word]
+                    else:
+                        start_histogram[next_word] = following_words[next_word]
+                    start_tokens += following_words[next_word]
+
+
 
 def build_map(source_text):
     words = source_text
