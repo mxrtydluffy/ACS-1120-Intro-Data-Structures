@@ -1,11 +1,30 @@
-from dictogram import Dictogram
-from histogram import file_reader
 import random
 
-source_text = file_reader("./data/corpus.txt")
-histogram = Dictogram(source_text)
 
-entry_point = histogram.sample()
+class Dictogram(dict):
+    """
+    Need to display histogram and count displayed words
+    """
+
+    def __init__(self, word_list=None):
+        super(Dictogram, self).__init__()
+        self.types = 0
+        self.tokens = 0
+        if word_list is not None:
+            for index, word in enumerate(word_list):
+                self.add_count(word)
+                if index + 1 <= len(word_list) - 1:
+                    self.add_next(word, word_list[index + 1])
+    
+    def add_count(self, word, count=1):
+        if word in self:
+            self[word]["count"] += count
+        else:
+            self[word] = {"count": count, "next": {}}
+            self.types += 1
+        self.tokens += count
+
+# entry_point = histogram.sample()
 
 def build_map(source_text):
     words = source_text
