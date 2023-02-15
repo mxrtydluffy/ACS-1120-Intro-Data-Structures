@@ -1,6 +1,5 @@
 import random
 
-
 class Dictogram(dict):
     """
     Need to display histogram and count displayed words
@@ -37,6 +36,32 @@ class Dictogram(dict):
             fence += self[word]["count"]
             if dart <= fence:
                 return word
+
+    def sample_next(self, word):
+        following_words = self[word]["next"]
+
+        following_histogram = {}
+        following_tokens = 0
+
+        for word in following_words:
+            if word in following_histogram:
+                following_histogram[word] += following_words[word]
+            else:
+                following_histogram[word] = following_words[word]
+            following_tokens += following_words[word]
+
+        dart = random.uniform(0, following_tokens)
+        fence = 0
+        for word in following_histogram:
+            fence += following_histogram[word]
+            if dart <= fence:
+                return word
+
+    def frequency(self, word):
+        """
+        Return frequency count of the displayed word.
+        """
+        return self[word]["count"] if word in self else 0
     
     def start_sample(self):
         start_histogram = {}
@@ -50,32 +75,36 @@ class Dictogram(dict):
                     else:
                         start_histogram[next_word] = following_words[next_word]
                     start_tokens += following_words[next_word]
+        dart = random.uniform(0, start_tokens)
+        fence = 0
+        for word in start_histogram:
+            fence += start_histogram[word]
+            if dart <= fence:
+                return word
 
+    def build_map(source_text):
+        words = source_text
+        histogram = {}
+        for i in range(len(words) -1):
+            word = words[i]
+            following_word = words[i + 1]
+            if word in histogram:
+                histogram[word].append(following_word)
+            else:
+                histogram[word] = (following_word)
+        return histogram
 
+    def sample_model(histogram, word):
+        following_words = histogram[word]
+        return random.choice(following_words)
 
-def build_map(source_text):
-    words = source_text
-    histogram = {}
-    for i in range(len(words) -1):
-        word = words[i]
-        following_word = words[i + 1]
-        if word in histogram:
-            histogram[word].append(following_word)
-        else:
-            histogram[word] = (following_word)
-    return histogram
-
-def sample_model(histogram, word):
-    following_words = histogram[word]
-    return random.choice(following_words)
-
-def make_sentence(histogram, first_word):
-    sentence = [first_word]
-    word = first_word
-    while word in histogram:
-        next_word = sample_model(histogram, word)
-        sentence.append(next_word)
-        word = next_word
-    return " ".join(sentence).captialize() + "."
+    def make_sentence(histogram, first_word):
+        sentence = [first_word]
+        word = first_word
+        while word in histogram:
+            next_word = sample_model(histogram, word)
+            sentence.append(next_word)
+            word = next_word
+        return " ".join(sentence).captialize() + "."
 
 print(build_map(source_text))
