@@ -87,7 +87,8 @@ class Dictogram(dict):
     #   Print functions   #
     #######################
 
-    def print_samples(histogram):
+
+def print_samples(histogram):
         """
         Prints histogram samples & calculates observed and sampled frequency
         """
@@ -103,16 +104,29 @@ class Dictogram(dict):
         print(divider)
         print(header)
         print(divider)
+        # Colored text indicators
+        default = "\033[m"
+        red = "\033[31m"
+        yellow = "\033[33m"
+        green = "\033[32m"
+        # Searching for each word in histogram
         for word, count in histogram.items():
             observed_freq = count["count"] / histogram.tokens
             samples = hist_samples.frequency(word)
             sampled_freq = samples / hist_samples.tokens
             # Calculuing error between the observed & sampled
             error = (sampled_freq - observed_freq) / observed_freq
+            colored_text = green if abs(error) < 0.05 else yellow if abs(error) < 0.1 else red
+            print(
+                "| {!r:<9} ".format(word)
+                + "| {:>4} = {:>6.2%} ".format(count["count"], observed_freq)
+                + "| {:>4} = {:>6.2%} ".format(samples, sampled_freq)
+                + "| {}{:>+7.2%}{} |".format(colored_text, error, default)
+            )
+        print(divider)
+        print()
 
-            # define colors later
-
-    def print_histogram(list_of_words):
+def print_histogram(list_of_words):
         print()
         print('''
         Histogram:
@@ -125,18 +139,34 @@ class Dictogram(dict):
             print("{!r} occurs {} times".format(word, freq))
         print()
         print_samples(histogram)
+            
 
-    
-
-    #######################
-    #    Main function    #
-    #######################
+#######################
+#    Main function    #
+#######################
 
 def main():
     import sys
     # Provides info about constants functions etc.
+    # Then tests the histograms on given letters of the word.
+    # Finally test histogram on repeitive words
     import sys
 
     arg = sys.argv[1:]
     if len(arg) >= 1:
-        
+        print_histogram(arg)
+    else:
+        word = "appliedcomputerscience"
+        print_histogram(list(word))
+        # fish text
+        fish_text = "one fish two fish red fish blue fish"
+        print_histogram(fish_text.split())
+        # Test histogram on words in a long repetitive sentence
+        woodchuck_text = (
+            "how much wood would a wood chuck chuck" " if a wood chuck could chuck wood"
+        )
+
+        print_histogram(woodchuck_text.split())
+
+if __name__ == "__main__":
+    main()
