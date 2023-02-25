@@ -37,7 +37,26 @@ class Dictogram(dict):
             if dart <= fence:
                 return word
 
-    def sample_next(self, word):
+    def start_sample(self):
+        start_histogram = {}
+        start_tokens = 0
+        for word in self:
+            if word[-1] in ["!", "?", "."]:
+                following_words = self[word]["next"]
+                for next_word in following_words:
+                    if next_word in start_histogram:
+                        start_histogram[next_word] += following_words[next_word]
+                    else:
+                        start_histogram[next_word] = following_words[next_word]
+                    start_tokens += following_words[next_word]
+        dart = random.uniform(0, start_tokens)
+        fence = 0
+        for word in start_histogram:
+            fence += start_histogram[word]
+            if dart <= fence:
+                return word
+
+    def next_sample(self, word):
         following_words = self[word]["next"]
 
         following_histogram = {}
@@ -62,49 +81,62 @@ class Dictogram(dict):
         Return frequency count of the displayed word.
         """
         return self[word]["count"] if word in self else 0
+
+
+    #######################
+    #   Print functions   #
+    #######################
+
+    def print_samples(histogram):
+        """
+        Prints histogram samples & calculates observed and sampled frequency
+        """
+        print("Histogram Samples:")
+        list_of_samples = [histogram.sample() for _ in range(10000)]
+        hist_samples = Dictogram(list_of_samples)
+        print("samples: {}".format(hist_samples))
+        print()
+        print("Instance frequeny and error from the distinguished frquency:")
+        header = "| Word Type | Observered Frequency | Sampled Frequency | Error |"
+        divider = "-" * len(header)
+        # Making samples appear
+        print(divider)
+        print(header)
+        print(divider)
+        for word, count in histogram.items():
+            observed_freq = count["count"] / histogram.tokens
+            samples = hist_samples.frequency(word)
+            sampled_freq = samples / hist_samples.tokens
+            # Calculuing error between the observed & sampled
+            error = (sampled_freq - observed_freq) / observed_freq
+
+            # define colors later
+
+    def print_histogram(list_of_words):
+        print()
+        print('''
+        Histogram:
+        Word list: {}'''.format(list_of_words))
+        histogram = Dictogram(list_of_words)
+        print("Dictogram: {}".format(histogram))
+        print("{} tokens, {} types".format(histogram.tokens, histogram.types))
+        for word in list_of_words[-2:]:
+            freq = histogram.frequency(word)
+            print("{!r} occurs {} times".format(word, freq))
+        print()
+        print_samples(histogram)
+
     
-    def start_sample(self):
-        start_histogram = {}
-        start_tokens = 0
-        for word in self:
-            if word[-1] in ["!", "?", "."]:
-                following_words = self[word]["next"]
-                for next_word in following_words:
-                    if next_word in start_histogram:
-                        start_histogram[next_word] += following_words[next_word]
-                    else:
-                        start_histogram[next_word] = following_words[next_word]
-                    start_tokens += following_words[next_word]
-        dart = random.uniform(0, start_tokens)
-        fence = 0
-        for word in start_histogram:
-            fence += start_histogram[word]
-            if dart <= fence:
-                return word
 
-    def build_map(source_text):
-        words = source_text
-        histogram = {}
-        for i in range(len(words) -1):
-            word = words[i]
-            following_word = words[i + 1]
-            if word in histogram:
-                histogram[word].append(following_word)
-            else:
-                histogram[word] = (following_word)
-        return histogram
+    #######################
+    #    Main function    #
+    #######################
 
-    def sample_model(histogram, word):
-        following_words = histogram[word]
-        return random.choice(following_words)
+def main():
+    import sys
+    # Provides info about constants functions etc.
+    import sys
 
-    def make_sentence(histogram, first_word):
-        sentence = [first_word]
-        word = first_word
-        while word in histogram:
-            next_word = sample_model(histogram, word)
-            sentence.append(next_word)
-            word = next_word
-        return " ".join(sentence).captialize() + "."
-
-print(build_map(source_text))
+    arg = sys.argv[1:]
+    if len(arg) >= 1:
+        

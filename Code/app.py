@@ -1,8 +1,7 @@
 """Main script, uses other modules to generate sentences."""
 from flask import Flask, request, render_template
-from sample import generate_sentence
+from dictogram_2 import display_markov
 from helper_functions import read_file
-from markov_chain import MarkovChain
 
 
 app = Flask(__name__)
@@ -17,7 +16,9 @@ text = read_file('./data/corpus.txt')
 def home():
     """Route that returns a web page containing the generated text."""
 
-    markov = MarkovChain(text)
+    sentences = int(request.args.get("num")) if request.args.get("num") else 1
+
+    context = {"sentence": display_markov(text, sentences)}
 
     return render_template('index.html', **context)
 
