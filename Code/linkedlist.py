@@ -55,10 +55,10 @@ class LinkedList:
         # TODO: Loop through all nodes and count one for each
 
         count = 0
-        node = self.head
-        while node is not None:
+        current_node = self.head
+        while current_node is not None:
             count += 1
-            node = node.next
+            current_node = current_node.next
         return count
 
     def append(self, item):
@@ -71,10 +71,10 @@ class LinkedList:
         node = Node(item)
         if self.is_empty() == True:
             self.head = node
-            # self.tail = node
+            self.tail = node
         else:
             self.tail.next = node
-        self.tail = node
+            self.tail = node
 
     def prepend(self, item):
         """Insert the given item at the head of this linked list.
@@ -84,21 +84,22 @@ class LinkedList:
 
         node = Node(item)
         if self.is_empty():
-            # node.head = node
+            self.head = node
             self.tail = node
         else:
-            self.next = self.head
-        self.head = node
+            node.next = self.head
+            self.head = node
 
     def find(self, matcher):
         """Return an item from this linked list if it is present.
         TODO: Best case running time: O(???) Why and under what conditions?
         TODO: Worst case running time: O(???) Why and under what conditions?"""
         # TODO: Loop through all nodes to find item, if present return True otherwise False
-
-        for node in self.items():
-            if matcher == node:
+        node = self.head
+        while node is not None:
+            if matcher in node.data:
                 return True
+            node = node.next
         return False
 
     def delete(self, item):
@@ -110,31 +111,29 @@ class LinkedList:
         # TODO: Otherwise raise error to tell user that delete has failed
         # Hint: raise ValueError('Item not found: {}'.format(item))
 
-        current_node = self.head
+        node = self.head
         previous_node = None
         found = False
-        while current_node is not None:
-            if current_node.data == item:
+        while not found and node is not None:
+            if node.data == item:
                 found = True
-                if current_node == self.head:
-                    if current_node.next == None:
-                        self.head = None
-                        self.tail = None
-                    else:
-                        self.head = current_node.next
-                elif current_node == self.tail:
-                    previous_node.next = None
+            else:
+                previous_node = node
+                node = node.next
+
+        if found:
+            if previous_node is None:
+                self.head = node.next
+                if self.tail == node:
+                    self.tail = None
+            else:
+                previous_node.next = node.next
+                if self.tail == node:
                     self.tail = previous_node
-                else:
-                    previous_node.next = current_node.next
-            previous_node = current_node
-            node = node.next
-
-
-        if found == False:
+        else:
             raise ValueError('Item not found: {}'.format(item))
     
-    def remove(self, original_node, new_node):
+    def replace(self, original_node, new_node):
         node = self.head
         while node is not None:
             if node.data == original_node:

@@ -46,7 +46,7 @@ class HashTable(object):
         for bucket in self.buckets:
             for key, value in bucket.items():
                 all_values.append(value)
-            return all_values
+        return all_values
 
 
     def items(self):
@@ -73,10 +73,11 @@ class HashTable(object):
         TODO: Running time: O(???) Why and under what conditions?"""
         # TODO: Find bucket where given key belongs
         # TODO: Check if key-value entry exists in bucket
-        if key in self.keys():
-            return True
-        else:
-            return False
+        for bucket in self.buckets:
+            for bucket_key, value in bucket.items():
+                if bucket_key == key:
+                    return True
+        return False
 
     def get(self, key):
         """Return the value associated with the given key, or raise KeyError.
@@ -103,9 +104,9 @@ class HashTable(object):
 
         index = self._bucket_index(key)
         bucket = self.buckets[index]
-        for item_key, item_value in bucket.items():
-            if item_key == key:
-                bucket.replace((item_key, item_value), (key, value))
+        for bucket_key, bucket_value in bucket.items():
+            if bucket_key == key:
+                bucket.replace((bucket_key, bucket_value), (key, value))
                 return
         bucket.append((key, value))
 
@@ -120,9 +121,9 @@ class HashTable(object):
         index = self._bucket_index(key)
         bucket = self.buckets[index]
 
-        for item_key, item_value in bucket.items():
-            if item_key == key:
-                bucket.delete((item_key, item_value))
+        for bucket_key, bucket_value in bucket.items():
+            if bucket_key == key:
+                bucket.delete((bucket_key, bucket_value))
                 return
         raise KeyError('Key not found: {}'.format(key))
         
