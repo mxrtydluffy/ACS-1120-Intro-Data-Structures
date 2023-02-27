@@ -1,6 +1,5 @@
 #!python
 
-
 class Node(object):
 
     def __init__(self, data):
@@ -55,14 +54,10 @@ class LinkedList:
         TODO: Running time: O(n) Why and under what conditions?"""
         # TODO: Loop through all nodes and count one for each
 
-        if self.head:
-            present_node = self.head
+        count = 0
+        for item in self.items():
             count += 1
-            while present_node.next:
-                count += 1
-                present_node = present_node.next
         return count
-
 
     def append(self, item):
         """Insert the given item at the tail of this linked list.
@@ -86,12 +81,12 @@ class LinkedList:
         # TODO: Prepend node before head, if it exists
 
         node = Node(item)
-        if self.head:
-            node.next = self.head
-            self.head = node
-        else:
-            self.head = node
+        if self.is_empty() == True:
+            node.head = node
             self.tail = node
+        else:
+            self.next = self.head
+            self.head = node
 
     def find(self, matcher):
         """Return an item from this linked list if it is present.
@@ -100,7 +95,7 @@ class LinkedList:
         # TODO: Loop through all nodes to find item, if present return True otherwise False
 
         node = self.head
-        while node:
+        while node is not None:
             if matcher in node.data:
                 return True
             node = node.next
@@ -115,39 +110,35 @@ class LinkedList:
         # TODO: Otherwise raise error to tell user that delete has failed
         # Hint: raise ValueError('Item not found: {}'.format(item))
 
+        current_node = self.head
         previous_node = None
-        next_node = None
-        if self.head:
-            present_node = self.head
-            while item not in present_node.data:
-                if present_node.next == None:
-                    raise ValueError('Item not found: {}'.format(item))
-                else:
-                    previous_node = present_node
-                    present_node = present_node.next
-                    if present_node.next:
-                        next_node = present_node.next
-                    else:
-                        self.tail = present_node
-            if present_node == self.head:
-                if present_node.next:
-                    self.head = present_node.next
-                else:
-                    self.head = None
-                    self.tail = None
-                    self = None
-            elif present_node.next == None:
-                self.tail = previous_node
-                present_node = None
-                previous_node.next = None
+        found = False
+        while not found and current_node is not None:
+            if current_node.data == item:
+                found = True
             else:
-                if present_node.next:
-                    previous_node.next = next_node
-                else:
+                previous_node = current_node
+                current_node = current_node.next
+
+        if found:
+            if previous_node is None:
+                self.head = current_node.next
+                if self.tail == current_node:
+                    self.tail = None
+            else:
+                previous_node.next = current_node.next
+                if self.tail == current_node:
                     self.tail = previous_node
         else:
             raise ValueError('Item not found: {}'.format(item))
-
+    
+    def remove(self, original_node, new_node):
+        node = self.head
+        while node is not None:
+            if node.data == original_node:
+                node.data = new_node
+                return
+            node = node.next
 
 def test_linked_list():
     ll = LinkedList()
