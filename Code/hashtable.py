@@ -63,14 +63,20 @@ class HashTable(object):
         TODO: Running time: O(???) Why and under what conditions?"""
         # TODO: Loop through all buckets
         # TODO: Count number of key-value entries in each bucket
-        return len(self.items())
+        length = 0
+        for bucket in self.buckets:
+            length += bucket.length()
+        return length
 
     def contains(self, key):
         """Return True if this hash table contains the given key, or False.
         TODO: Running time: O(???) Why and under what conditions?"""
         # TODO: Find bucket where given key belongs
         # TODO: Check if key-value entry exists in bucket
-        return True if key in self.keys() else False
+        if key in self.keys():
+            return True
+        else:
+            return False
 
     def get(self, key):
         """Return the value associated with the given key, or raise KeyError.
@@ -80,10 +86,11 @@ class HashTable(object):
         # TODO: If found, return value associated with given key
         # TODO: Otherwise, raise error to tell user get failed
         # Hint: raise KeyError('Key not found: {}'.format(key))
-        bucket = self.buckets[self._bucket_index(key)]
-        for item_key, item_value in bucket.items():
-            if item_key == key:
-                return item_value
+        index = self._bucket_index(key)
+        buckets = self.buckets[index].items()
+        for bucket in buckets:
+            if bucket[0] == key:
+                return bucket[1]
         raise KeyError('Key not found: {}'.format(key))
 
     def set(self, key, value):
@@ -94,7 +101,8 @@ class HashTable(object):
         # TODO: If found, update value associated with given key
         # TODO: Otherwise, insert given key-value entry into bucket
 
-        bucket = self.buckets[self._bucket_index(key)]
+        index = self._bucket_index(key)
+        bucket = self.buckets[index]
         for item_key, item_value in bucket.items():
             if item_key == key:
                 bucket.replace((item_key, item_value), (key, value))
@@ -109,8 +117,8 @@ class HashTable(object):
         # TODO: If found, delete entry associated with given key
         # TODO: Otherwise, raise error to tell user delete failed
         # Hint: raise KeyError('Key not found: {}'.format(key))
-        
-        bucket = self.buckets[self._bucket_index(key)]
+        index = self._bucket_index(key)
+        bucket = self.buckets[index]
 
         for item_key, item_value in bucket.items():
             if item_key == key:
