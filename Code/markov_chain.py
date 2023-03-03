@@ -5,82 +5,84 @@ class Dictogram(dict):
     Need to display histogram and count displayed words
     """
 
-    def __init__(self, word_list=None):
+    def __init__(self, list_of_words=None, order=1):
         super(Dictogram, self).__init__()
         self.types = 0
         self.tokens = 0
-        if word_list is not None:
-            for index, word in enumerate(word_list):
-                self.add_count(word)
-                if index + 1 <= len(word_list) - 1:
-                    self.add_next(word, word_list[index + 1])
+        self.order = order
+        if list_of_words is not None:
+            for index in range(len(list_of_words)):
+                self.add_count(tuple(list_of_words[index: index + order]))
+                if index + order <= len(list_of_words) - order:
+                    self.add_next_word(tuple(list_of_words[index: index + order]), tuple(list_of_words[index+1: index + order + 1]))
     
-    def add_count(self, word, count=1):
-        if word in self:
-            self[word]["count"] += count
+    def add_count(self, word_tuple, count=1):
+        if word_tuple in self:
+            self[word_tuple]["count"] += count
         else:
-            self[word] = {"count": count, "next": {}}
+            self[word_tuple] = {"count": count, "next": {}}
             self.types += 1
         self.tokens += count
 
-    def add_next_word(self, word, following_word):
-        if following_word in self[word]["next"]:
-            self[word]["next"][following_word] += 1
+    def add_next_word(self, word_tuple, following_tuple):
+        if following_tuple in self[word_tuple]["next"]:
+            self[word_tuple]["next"][following_tuple] += 1
         else:
-            self[word]["next"][following_word] += 1
+            self[word_tuple]["next"][following_tuple] = 1
 
     def sample(self):
         dart = random.uniform(0, self.tokens)
         fence = 0
-        for word in self:
-            fence += self[word]["count"]
+        for word_tuple in self:
+            fence += self[word_tuple]["count"]
             if dart <= fence:
-                return word
+                return word_tuple
 
     def start_sample(self):
         start_histogram = {}
         start_tokens = 0
-        for word in self:
-            if word[-1] in ["!", "?", "."]:
-                following_words = self[word]["next"]
-                for next_word in following_words:
+        for word_tuple in self:
+            if word_tuple[-1][-1] in ["!", "?", "."]:
+                following_tuples = self[word_tuple]["next"]
+                for next_word in following_tuples:
                     if next_word in start_histogram:
-                        start_histogram[next_word] += following_words[next_word]
+                        start_histogram[next_word] += following_tuples[next_word]
                     else:
-                        start_histogram[next_word] = following_words[next_word]
-                    start_tokens += following_words[next_word]
+                        start_histogram[next_word] = following_tuples[next_word]
+                    start_tokens += following_tuples[next_word]
+
         dart = random.uniform(0, start_tokens)
         fence = 0
-        for word in start_histogram:
-            fence += start_histogram[word]
+        for word_tuple in start_histogram:
+            fence += start_histogram[word_tuple]
             if dart <= fence:
-                return word
+                return word_tuple
 
-    def next_sample(self, word):
-        following_words = self[word]["next"]
+    def next_sample(self, word_tuple):
+        following_tuples = self[word_tuple]["next"]
 
         following_histogram = {}
         following_tokens = 0
 
-        for word in following_words:
-            if word in following_histogram:
-                following_histogram[word] += following_words[word]
+        for word_tuple in following_tuples:
+            if word_tuple in following_histogram:
+                following_histogram[word_tuple] += following_tuples[word_tuple]
             else:
-                following_histogram[word] = following_words[word]
-            following_tokens += following_words[word]
+                following_histogram[word_tuple] = following_tuples[word_tuple]
+            following_tokens += following_tuples[word_tuple]
 
         dart = random.uniform(0, following_tokens)
         fence = 0
-        for word in following_histogram:
-            fence += following_histogram[word]
+        for word_tuple in following_histogram:
+            fence += following_histogram[word_tuple]
             if dart <= fence:
-                return word
+                return word_tuple
 
-    def frequency(self, word):
+    def frequency(self, word_tuple):
         """
         Return frequency count of the displayed word.
         """
-        return self[word]["count"] if word in self else 0
+        return self[word_tuple]["count"] if word_tuple in self else 0
 
 
     #######################
@@ -162,11 +164,14 @@ def main():
         fish_text = "one fish two fish red fish blue fish"
         print_histogram(fish_text.split())
         # Test histogram on words in a long repetitive sentence
-        woodchuck_text = (
-            "how much wood would a wood chuck chuck" " if a wood chuck could chuck wood"
+        peterPiper_text = (
+            "Peter Piper picked a peck of pickled peppers"
+            "A peck of pickled peppers Peter Piper picked"
+            "If Peter Piper picked a peck of pickled peppers"
+            "Where's the peck of pickled peppers Peter Piper picked"
         )
 
-        print_histogram(woodchuck_text.split())
+        print_histogram(peterPiper_text.split())
 
 if __name__ == "__main__":
     main()

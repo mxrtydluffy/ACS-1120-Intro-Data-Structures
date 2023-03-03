@@ -18,7 +18,7 @@ def home():
 
     sentences = int(request.args.get("num")) if request.args.get("num") else 1
 
-    context = {"sentence": display_markov(text, sentences)}
+    context = {"sentence": display_markov(text, sentences, 2)}
 
     return render_template('index.html', **context)
 
