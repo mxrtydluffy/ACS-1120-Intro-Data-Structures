@@ -1,8 +1,19 @@
 # ACS 1120: Intro to Data Structures
 
-## Course Description
+## Description
 
 A project based course that looks under the hood at data structures and algorithms to see how they work. In addition to implementing these structures in an application; students will build them from scratch, analyze their complexity, and benchmark their performance to gain an understanding of their tradeoffs and when to use them in practice. Students will write scripts, functions, and library modules to use text processing tools like regular expressions, construct and sample probability distributions to create a Markov language model and gain insight into how grammar works and natural language processing techniques.
+
+## How to Use
+```bash
+cd Code
+python3 app.py
+```
+
+## Credits
+Corpus.txt text is taken [here](https://sfy.ru/transcript/back_to_the_future_ts). Script is used for educational purposes only.
+
+---
 
 ## Repository Setup
 
